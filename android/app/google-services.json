@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "42167101962",
+    "project_id": "rentalz-f3c08",
+    "storage_bucket": "rentalz-f3c08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42167101962:android:537a7bf9e5d110e77e8df3",
+        "android_client_info": {
+          "package_name": "com.example.rentalz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42167101962-8lvf0e421il3n78l1dgpc2fcavddpn5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPoD7paUHtgIsJzlVsb3dbDSsU8ulOgpQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "42167101962-8lvf0e421il3n78l1dgpc2fcavddpn5t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
