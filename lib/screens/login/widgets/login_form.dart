@@ -6,6 +6,7 @@ import 'custom_button.dart';
 import 'custom_input_field.dart';
 import 'fade_slide_transition.dart';
 import '../../register/register.dart';
+import '../../rentalzForm/rentalzForm.dart';
 
 class LoginForm extends StatefulWidget {
   final Animation<double> animation;
@@ -26,7 +27,6 @@ class _LoginFormState extends State<LoginForm> {
 
   late String _userPassword;
 
-  late String _messageRegister;
 
   void _login() async {
     try {
@@ -36,8 +36,14 @@ class _LoginFormState extends State<LoginForm> {
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No user found for that email.')),
+        );
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Wrong password provided for that user.')),
+        );
         print('Wrong password provided for that user.');
       }
     }
@@ -48,7 +54,6 @@ class _LoginFormState extends State<LoginForm> {
     final height =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     final space = height > 650 ? kSpaceM : kSpaceS;
-
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingL),
@@ -69,7 +74,10 @@ class _LoginFormState extends State<LoginForm> {
                   });
                 },
                 validation: (value) {
-                  value!.isEmpty ? 'Please enter an email!' : null;
+                  if (value!.isEmpty) {
+                    return 'Your Username or Email is empty!';
+                  }
+                  return null;
                 },
               ),
             ),
@@ -87,7 +95,10 @@ class _LoginFormState extends State<LoginForm> {
                   });
                 },
                 validation: (value) {
-                  value!.isEmpty ? 'Please enter a password!' : null;
+                  if (value!.isEmpty) {
+                    return 'Your password is empty!';
+                  }
+                  return null;
                 },
               ),
             ),
@@ -102,9 +113,6 @@ class _LoginFormState extends State<LoginForm> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()){
                     _login();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Logging...!')),
-                    );
                     FirebaseAuth.instance
                         .authStateChanges()
                         .listen((User? user) {
@@ -114,11 +122,12 @@ class _LoginFormState extends State<LoginForm> {
                         print(user);
                         Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => Register(screenHeight: height),
-                            )
-                        );
+                              builder: (_) => RentalzForm(screenHeight: height),
+                              )
+                          );
+                        }
                       }
-                    });
+                    );
                   }
                 },
               ),
@@ -155,7 +164,7 @@ class _LoginFormState extends State<LoginForm> {
                 },
               ),
             ),
-            SizedBox(height: 4 * space),
+            SizedBox(height: 6 * space),
           ],
         ),
       ),

@@ -14,7 +14,7 @@ class BlueTopClipper extends CustomClipper<Path> {
       size.width / 2.2,
       260.0 + yOffset,
       size.width,
-      170.0 + yOffset,
+      185.0 + yOffset,
     )
     ..lineTo(size.width, 0.0)
     ..close();

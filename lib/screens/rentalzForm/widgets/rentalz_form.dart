@@ -147,8 +147,9 @@ class _RentalZFormState extends State<RentalZForm> {
               child: CustomButton(
                 color: kBlack,
                 textColor: kWhite,
-                text: 'Already has RentalZ account!',
-                onPressed: () {
+                text: 'Log Out',
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
                   Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => Login(screenHeight: height),
