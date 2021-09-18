@@ -5,18 +5,18 @@ import 'widgets/custom_clippers/index.dart';
 import 'widgets/header.dart';
 import 'widgets/rentalz_form.dart';
 
-class Register extends StatefulWidget {
+class RentalzForm extends StatefulWidget {
   final double screenHeight;
 
-  const Register({
+  const RentalzForm({
     required this.screenHeight,
   });
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _RentalzFormState createState() => _RentalzFormState();
 }
 
-class _RegisterState extends State<Register> with SingleTickerProviderStateMixin {
+class _RentalzFormState extends State<RentalzForm> with SingleTickerProviderStateMixin {
   late final AnimationController _animationController;
   late final Animation<double> _headerTextAnimation;
   late final Animation<double> _formElementAnimation;

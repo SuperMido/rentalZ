@@ -39,7 +39,7 @@ class Header extends StatelessWidget {
             animation: animation,
             additionalOffset: 16.0,
             child: Text(
-              'Rentalz will allow the user to find, and edit rental listings.',
+              'ABC',
               style: Theme.of(context)
                   .textTheme
                   .subtitle1!

@@ -6,16 +6,20 @@ class CustomInputField extends StatelessWidget {
   final String label;
   final IconData prefixIcon;
   final bool obscureText;
+  final String? Function(String?) validation;
+  final String? Function(String?) onChanged;
 
   const CustomInputField({
     required this.label,
     required this.prefixIcon,
+    required this.validation,
     this.obscureText = false,
+    required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(kPaddingM),
         focusedBorder: OutlineInputBorder(
@@ -34,6 +38,8 @@ class CustomInputField extends StatelessWidget {
           color: kBlack.withOpacity(0.5),
         ),
       ),
+      validator: validation,
+      onChanged: onChanged,
       obscureText: obscureText,
     );
   }

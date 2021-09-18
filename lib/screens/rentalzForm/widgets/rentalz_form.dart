@@ -31,33 +31,6 @@ class _RentalZFormState extends State<RentalZForm> {
 
   late String _messageRegister;
 
-  void _register() async {
-    try {
-        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _userEmail,
-            password: _userPassword
-        );
-        setState(() {
-          _success = true;
-        });
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        setState(() {
-          _success = false;
-          _messageRegister = 'The password provided is too weak.';
-        });
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        setState(() {
-          _success = false;
-          _messageRegister = 'The account already exists for that email.';
-        });
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +125,6 @@ class _RentalZFormState extends State<RentalZForm> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Registering your account...!')),
                     );
-                    _register();
                     if (_success){
                       ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Your account have been created!')));

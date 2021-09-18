@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
@@ -6,12 +7,41 @@ import 'custom_input_field.dart';
 import 'fade_slide_transition.dart';
 import '../../register/register.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   final Animation<double> animation;
 
-  const LoginForm({
+  LoginForm({
     required this.animation,
   });
+
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+
+  final _formKey = GlobalKey<FormState>();
+
+  late String _userEmail;
+
+  late String _userPassword;
+
+  late String _messageRegister;
+
+  void _login() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _userEmail,
+          password: _userPassword
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,72 +52,112 @@ class LoginForm extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingL),
-      child: Column(
-        children: <Widget>[
-          FadeSlideTransition(
-            animation: animation,
-            additionalOffset: 0.0,
-            child: const CustomInputField(
-              label: 'Username or Email',
-              prefixIcon: Icons.person,
-              obscureText: true,
-            ),
-          ),
-          SizedBox(height: space),
-          FadeSlideTransition(
-            animation: animation,
-            additionalOffset: space,
-            child: const CustomInputField(
-              label: 'Password',
-              prefixIcon: Icons.lock,
-              obscureText: true,
-            ),
-          ),
-          SizedBox(height: space),
-          FadeSlideTransition(
-            animation: animation,
-            additionalOffset: 2 * space,
-            child: CustomButton(
-              color: kBlue,
-              textColor: kWhite,
-              text: 'Login to continue',
-              onPressed: () {},
-            ),
-          ),
-          SizedBox(height: 2 * space),
-          FadeSlideTransition(
-            animation: animation,
-            additionalOffset: 3 * space,
-            child: CustomButton(
-              color: kWhite,
-              textColor: kBlack.withOpacity(0.5),
-              text: 'Continue with Google',
-              image: const Image(
-                image: AssetImage(kGoogleLogoPath),
-                height: 48.0,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: <Widget>[
+            FadeSlideTransition(
+              animation: widget.animation,
+              additionalOffset: 0.0,
+              child: CustomInputField(
+                label: 'Username or Email',
+                prefixIcon: Icons.person,
+                obscureText: false,
+                onChanged: (value) {
+                  setState(() {
+                    _userEmail = value!;
+                  });
+                },
+                validation: (value) {
+                  value!.isEmpty ? 'Please enter an email!' : null;
+                },
               ),
-              onPressed: () {},
             ),
-          ),
-          SizedBox(height: space),
-          FadeSlideTransition(
-            animation: animation,
-            additionalOffset: 4 * space,
-            child: CustomButton(
-              color: kBlack,
-              textColor: kWhite,
-              text: 'Create a RentalZ Account',
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => Register(screenHeight: height),
-                    )
-                );
-              },
+            SizedBox(height: space),
+            FadeSlideTransition(
+              animation: widget.animation,
+              additionalOffset: space,
+              child: CustomInputField(
+                label: 'Password',
+                prefixIcon: Icons.lock,
+                obscureText: true,
+                onChanged: (value) {
+                  setState(() {
+                    _userPassword = value!;
+                  });
+                },
+                validation: (value) {
+                  value!.isEmpty ? 'Please enter a password!' : null;
+                },
+              ),
             ),
-          ),
-          SizedBox(height: 4 * space),
-        ],
+            SizedBox(height: space),
+            FadeSlideTransition(
+              animation: widget.animation,
+              additionalOffset: 2 * space,
+              child: CustomButton(
+                color: kBlue,
+                textColor: kWhite,
+                text: 'Login to continue',
+                onPressed: () {
+                  if (_formKey.currentState!.validate()){
+                    _login();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Logging...!')),
+                    );
+                    FirebaseAuth.instance
+                        .authStateChanges()
+                        .listen((User? user) {
+                      if (user == null) {
+                        print('User is currently signed out!');
+                      } else {
+                        print(user);
+                        Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => Register(screenHeight: height),
+                            )
+                        );
+                      }
+                    });
+                  }
+                },
+              ),
+            ),
+            SizedBox(height: 2 * space),
+            FadeSlideTransition(
+              animation: widget.animation,
+              additionalOffset: 3 * space,
+              child: CustomButton(
+                color: kWhite,
+                textColor: kBlack.withOpacity(0.5),
+                text: 'Continue with Google',
+                image: const Image(
+                  image: AssetImage(kGoogleLogoPath),
+                  height: 48.0,
+                ),
+                onPressed: () {},
+              ),
+            ),
+            SizedBox(height: space),
+            FadeSlideTransition(
+              animation: widget.animation,
+              additionalOffset: 4 * space,
+              child: CustomButton(
+                color: kBlack,
+                textColor: kWhite,
+                text: 'Create a RentalZ Account',
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => Register(screenHeight: height),
+                      )
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 4 * space),
+          ],
+        ),
       ),
     );
   }
