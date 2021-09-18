@@ -7,18 +7,18 @@ import 'custom_button.dart';
 import 'custom_input_field.dart';
 import 'fade_slide_transition.dart';
 
-class RegisterForm extends StatefulWidget {
+class RentalZForm extends StatefulWidget {
   final Animation<double> animation;
 
-  RegisterForm({
+  RentalZForm({
     required this.animation,
   });
 
   @override
-  _RegisterFormState createState() => _RegisterFormState();
+  _RentalZFormState createState() => _RentalZFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _RentalZFormState extends State<RentalZForm> {
   final _formKey = GlobalKey<FormState>();
 
   late String _userEmail;

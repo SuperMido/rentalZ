@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'screens/onboarding/onboarding.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class App extends StatelessWidget {
   @override
@@ -19,4 +20,8 @@ class App extends StatelessWidget {
   }
 }
 
-void main() => runApp(App());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(App());
+}
