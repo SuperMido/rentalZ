@@ -4,12 +4,11 @@ import '../../../constants.dart';
 import 'custom_button.dart';
 import 'custom_input_field.dart';
 import 'fade_slide_transition.dart';
-import '../../register/register.dart';
 
-class LoginForm extends StatelessWidget {
+class RegisterForm extends StatelessWidget {
   final Animation<double> animation;
 
-  const LoginForm({
+  const RegisterForm({
     required this.animation,
   });
 
@@ -18,7 +17,6 @@ class LoginForm extends StatelessWidget {
     final height =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     final space = height > 650 ? kSpaceM : kSpaceS;
-
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingL),
@@ -46,46 +44,25 @@ class LoginForm extends StatelessWidget {
           SizedBox(height: space),
           FadeSlideTransition(
             animation: animation,
-            additionalOffset: 2 * space,
-            child: CustomButton(
-              color: kBlue,
-              textColor: kWhite,
-              text: 'Login to continue',
-              onPressed: () {},
-            ),
-          ),
-          SizedBox(height: 2 * space),
-          FadeSlideTransition(
-            animation: animation,
-            additionalOffset: 3 * space,
-            child: CustomButton(
-              color: kWhite,
-              textColor: kBlack.withOpacity(0.5),
-              text: 'Continue with Google',
-              image: const Image(
-                image: AssetImage(kGoogleLogoPath),
-                height: 48.0,
-              ),
-              onPressed: () {},
+            additionalOffset: space,
+            child: const CustomInputField(
+              label: 'Confirm Password',
+              prefixIcon: Icons.lock,
+              obscureText: true,
             ),
           ),
           SizedBox(height: space),
           FadeSlideTransition(
             animation: animation,
-            additionalOffset: 4 * space,
+            additionalOffset: 2 * space,
             child: CustomButton(
-              color: kBlack,
+              color: kBlue,
               textColor: kWhite,
-              text: 'Create a RentalZ Account',
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => Register(screenHeight: height),
-                    )
-                );
-              },
+              text: 'Create Account',
+              onPressed: () {},
             ),
           ),
+          SizedBox(height: 5 * space),
         ],
       ),
     );
