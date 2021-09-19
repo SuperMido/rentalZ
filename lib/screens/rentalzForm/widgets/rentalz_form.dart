@@ -1,3 +1,4 @@
+import 'package:dropdownfield/dropdownfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rentalz/screens/login/login.dart';
@@ -31,6 +32,14 @@ class _RentalZFormState extends State<RentalZForm> {
 
   late String _messageRegister;
 
+  late String propertyType = '';
+
+  List<String> propertyTypes = [
+    "Flat",
+    "House",
+    "Bungalow",
+  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,26 +53,31 @@ class _RentalZFormState extends State<RentalZForm> {
         key: _formKey,
         child: Column(
           children: <Widget>[
-            FadeSlideTransition(
-              animation: widget.animation,
-              additionalOffset: 0.0,
-              child: CustomInputField(
-                label: 'Username or Email',
-                prefixIcon: Icons.person,
-                obscureText: false,
-                validation: (value) {
-                  if (value!.isEmpty) {
-                    return 'Username or Email is empty!';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  setState(() {
-                    _userEmail = value!;
-                  });
-                  return _userEmail;
-                },
+            DropDownField(
+              onValueChanged: (dynamic value) {
+                propertyType = value;
+              },
+              value: propertyType,
+              required: false,
+              hintText: 'Choose a property type',
+              labelText: 'Property Type',
+              items: propertyTypes,
+            ),
+            SizedBox(height: space),
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                filled: true,
+                labelText: 'Restaurant type',
               ),
+              items: <String>['Studio ', 'One', 'Two'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: new Text(value),
+                );
+              }).toList(),
+              onChanged: (data) {
+
+              },
             ),
             SizedBox(height: space),
             FadeSlideTransition(
@@ -158,7 +172,6 @@ class _RentalZFormState extends State<RentalZForm> {
                 },
               ),
             ),
-            SizedBox(height: 8 * space),
           ],
         ),
       ),
