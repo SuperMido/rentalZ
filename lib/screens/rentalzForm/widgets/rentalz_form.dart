@@ -6,7 +6,7 @@ import 'package:rentalz/screens/login/login.dart';
 
 import '../../../constants.dart';
 import 'custom_button.dart';
-import 'custom_input_field.dart';
+import 'custom_multi_text_field.dart';
 import 'custom_price_input_field.dart';
 import 'fade_slide_transition.dart';
 
@@ -21,27 +21,21 @@ class RentalZForm extends StatefulWidget {
   _RentalZFormState createState() => _RentalZFormState();
 }
 
+enum FurnitureType  { Furnished, Unfurnished, Part_Furnished }
+
 class _RentalZFormState extends State<RentalZForm> {
   final _formKey = GlobalKey<FormState>();
 
-  late String _userEmail;
+  late String propertyType = "Flat";
 
-  late String _userPassword;
+  var currentUser = FirebaseAuth.instance.currentUser;
 
-  late String _userPasswordConfirm;
-
-  late bool _success = false;
-
-  late String _messageRegister;
-
-  late String propertyType = '';
 
   List<String> propertyTypes = [
     "Flat",
     "House",
     "Bungalow",
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +49,19 @@ class _RentalZFormState extends State<RentalZForm> {
         key: _formKey,
         child: Column(
           children: <Widget>[
+            FadeSlideTransition(
+              animation: widget.animation,
+              additionalOffset: space,
+              child: Text(
+                  currentUser!.email.toString(),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                  color: Colors.blue
+                ),
+              ),
+            ),
+            SizedBox(height: space),
             FadeSlideTransition(
               animation: widget.animation,
               additionalOffset: space,
@@ -132,6 +139,44 @@ class _RentalZFormState extends State<RentalZForm> {
             SizedBox(height: space),
             FadeSlideTransition(
               animation: widget.animation,
+              additionalOffset: space,
+              child:
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  filled: true,
+                  labelText: 'Furniture types',
+                ),
+                items: <String>['Furnished', 'Unfurnished', 'Part Furnished'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: new Text(value),
+                  );
+                }).toList(),
+                onChanged: (data) {
+                },
+              ),
+            ),
+            SizedBox(height: space),
+            FadeSlideTransition(
+              animation: widget.animation,
+              additionalOffset: space,
+              child: CustomMultiTextField(
+                label: 'Note',
+                prefixIcon: Icons.assignment,
+                obscureText: false,
+                validation: (value) {
+                  if (value!.isEmpty) {
+                    return '';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                },
+              ),
+            ),
+            SizedBox(height: space),
+            FadeSlideTransition(
+              animation: widget.animation,
               additionalOffset: 2 * space,
               child: CustomButton(
                 color: kBlue,
@@ -142,17 +187,6 @@ class _RentalZFormState extends State<RentalZForm> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Registering your account...!')),
                     );
-                    if (_success){
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Your account have been created!')));
-                    }
-                    else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(_messageRegister)));
-                      setState(() {
-                        _messageRegister = '';
-                      });
-                    }
                   }
                 },
               ),
