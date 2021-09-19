@@ -101,42 +101,6 @@ class _RentalzFormState extends State<RentalzForm> with SingleTickerProviderStat
       backgroundColor: kWhite,
       body: Stack(
         children: <Widget>[
-          AnimatedBuilder(
-            animation: _whiteTopClipperAnimation,
-            builder: (_, Widget? child) {
-              return ClipPath(
-                clipper: WhiteTopClipper(
-                  yOffset: _whiteTopClipperAnimation.value,
-                ),
-                child: child,
-              );
-            },
-            child: Container(color: kGrey),
-          ),
-          AnimatedBuilder(
-            animation: _greyTopClipperAnimation,
-            builder: (_, Widget? child) {
-              return ClipPath(
-                clipper: GreyTopClipper(
-                  yOffset: _greyTopClipperAnimation.value,
-                ),
-                child: child,
-              );
-            },
-            child: Container(color: kBlue),
-          ),
-          AnimatedBuilder(
-            animation: _blueTopClipperAnimation,
-            builder: (_, Widget? child) {
-              return ClipPath(
-                clipper: BlueTopClipper(
-                  yOffset: _blueTopClipperAnimation.value,
-                ),
-                child: child,
-              );
-            },
-            child: Container(color: kWhite),
-          ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: kPaddingL),

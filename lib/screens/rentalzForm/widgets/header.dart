@@ -22,28 +22,15 @@ class Header extends StatelessWidget {
             color: kBlue,
             size: 48.0,
           ),
-          const SizedBox(height: kSpaceM),
           FadeSlideTransition(
             animation: animation,
             additionalOffset: 0.0,
             child: Text(
-              'Create a RentalZ Account',
+              'RentalZ',
               style: Theme.of(context)
                   .textTheme
                   .headline5!
                   .copyWith(color: kBlack, fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(height: kSpaceS),
-          FadeSlideTransition(
-            animation: animation,
-            additionalOffset: 16.0,
-            child: Text(
-              'ABC',
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1!
-                  .copyWith(color: kBlack.withOpacity(0.5)),
             ),
           ),
         ],

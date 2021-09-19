@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../constants.dart';
 
-class CustomInputField extends StatelessWidget {
+class CustomPriceInputField extends StatelessWidget {
   final String label;
   final IconData prefixIcon;
   final bool obscureText;
   final String? Function(String?) validation;
   final String? Function(String?) onChanged;
 
-  const CustomInputField({
+  const CustomPriceInputField({
     required this.label,
     required this.prefixIcon,
     required this.validation,
@@ -41,7 +42,9 @@ class CustomInputField extends StatelessWidget {
       validator: validation,
       onChanged: onChanged,
       obscureText: obscureText,
-      inputFormatters: [],
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+      ],
     );
   }
 }
