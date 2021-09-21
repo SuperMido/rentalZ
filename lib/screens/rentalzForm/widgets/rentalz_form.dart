@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdownfield/dropdownfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +27,21 @@ enum FurnitureType  { Furnished, Unfurnished, Part_Furnished }
 class _RentalZFormState extends State<RentalZForm> {
   final _formKey = GlobalKey<FormState>();
 
-  late String propertyType = "Flat";
+  late String _bedRoom;
 
-  var currentUser = FirebaseAuth.instance.currentUser;
+  late String _dateTime;
+
+  late String _price;
+
+  late String _furnitureType;
+
+  late String _note;
+
+  late String _propertyType = 'Flat';
+
+  var _currentUser = FirebaseAuth.instance.currentUser;
+
+  final database = FirebaseFirestore.instance;
 
 
   List<String> propertyTypes = [
@@ -53,7 +66,7 @@ class _RentalZFormState extends State<RentalZForm> {
               animation: widget.animation,
               additionalOffset: space,
               child: Text(
-                  currentUser!.email.toString(),
+                  _currentUser!.email.toString(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
@@ -62,19 +75,24 @@ class _RentalZFormState extends State<RentalZForm> {
               ),
             ),
             SizedBox(height: space),
-            FadeSlideTransition(
-              animation: widget.animation,
-              additionalOffset: space,
-              child: DropDownField(
-                onValueChanged: (dynamic value) {
-                  propertyType = value;
-                },
-                value: propertyType,
-                required: true,
-                labelText: 'Property Type*',
-                items: propertyTypes,
-                strict: true,
-                icon: Icon(Icons.account_balance),
+            SingleChildScrollView(
+              child: FadeSlideTransition(
+                animation: widget.animation,
+                additionalOffset: space,
+                child: DropDownField(
+                  onValueChanged: (dynamic value) {
+                    _propertyType = value;
+                    setState(() {
+                      _propertyType = value;
+                    });
+                  },
+                  value: _propertyType,
+                  required: true,
+                  labelText: 'Property Type*',
+                  items: propertyTypes,
+                  strict: true,
+                  icon: Icon(Icons.account_balance),
+                ),
               ),
             ),
             SizedBox(height: space),
@@ -93,6 +111,15 @@ class _RentalZFormState extends State<RentalZForm> {
                   );
                 }).toList(),
                 onChanged: (data) {
+                  setState(() {
+                    _bedRoom = data!;
+                  });
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please select bedroom!';
+                  }
+                  return null;
                 },
               ),
             ),
@@ -101,11 +128,8 @@ class _RentalZFormState extends State<RentalZForm> {
               animation: widget.animation,
               additionalOffset: space,
               child:
-
-              TextField(
+              TextFormField(
                 keyboardType: TextInputType.datetime,
-                // controller: _controllerDOB,
-                // focusNode: _focusNodeDOB,
                 decoration: InputDecoration(
                   hintText: 'DD/MM/YYYY',
                   counterText: '',
@@ -116,6 +140,17 @@ class _RentalZFormState extends State<RentalZForm> {
                   LengthLimitingTextInputFormatter(10),
                   _DateFormatter(),
                 ],
+                onChanged: (value) {
+                  setState(() {
+                    _dateTime = value;
+                  });
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please input Date Time!';
+                  }
+                  return null;
+                },
               ),
             ),
             SizedBox(height: space),
@@ -128,11 +163,14 @@ class _RentalZFormState extends State<RentalZForm> {
                 obscureText: false,
                 validation: (value) {
                   if (value!.isEmpty) {
-                    return '';
+                    return 'Please input price!';
                   }
                   return null;
                 },
                 onChanged: (value) {
+                  setState(() {
+                    _price = value!;
+                  });
                 },
               ),
             ),
@@ -146,13 +184,16 @@ class _RentalZFormState extends State<RentalZForm> {
                   filled: true,
                   labelText: 'Furniture types',
                 ),
-                items: <String>['Furnished', 'Unfurnished', 'Part Furnished'].map((String value) {
+                items: <String>['Furnished', 'Unfurnished', 'Part Furnished', 'None'].map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: new Text(value),
                   );
                 }).toList(),
                 onChanged: (data) {
+                  setState(() {
+                    _furnitureType = data!;
+                  });
                 },
               ),
             ),
@@ -165,12 +206,11 @@ class _RentalZFormState extends State<RentalZForm> {
                 prefixIcon: Icons.assignment,
                 obscureText: false,
                 validation: (value) {
-                  if (value!.isEmpty) {
-                    return '';
-                  }
-                  return null;
                 },
                 onChanged: (value) {
+                  setState(() {
+                    _note = value!;
+                  });
                 },
               ),
             ),
@@ -182,11 +222,28 @@ class _RentalZFormState extends State<RentalZForm> {
                 color: kBlue,
                 textColor: kWhite,
                 text: 'Submit',
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()){
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Registering your account...!')),
+                      const SnackBar(content: Text('Submitting...!')),
                     );
+                    print(_currentUser!.uid);
+                    print(_propertyType);
+                    print(_bedRoom);
+                    print(_dateTime);
+                    print(_price);
+                    print(_furnitureType);
+                    print(_note);
+                    await database.collection("rentalZ").add(
+                        {
+                          'uid': _currentUser!.uid,
+                          'propType': _propertyType,
+                          'bedRoom': _bedRoom,
+                          'date': _dateTime,
+                          'price': _price,
+                          'furType': _furnitureType,
+                          'note': _note
+                        });
                   }
                 },
               ),
